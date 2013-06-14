@@ -35,7 +35,10 @@ export CLICOLOR=1
 
 # Setup gitbranch info function
 function git_branch {
-    git symbolic-ref -q --short HEAD 2>/dev/null | tr '\n' ' '
+    git_branch_var=$(git symbolic-ref -q --short HEAD 2>/dev/null)
+    if [ $git_branch_var ]; then
+        echo "($git_branch_var) "
+    fi
 }
 
-PS1="\u@\h \w \$(git_branch)\$ "
+PS1="[\u@\h \w] \$(git_branch)\$ "
