@@ -1,0 +1,25 @@
+[user]
+    name = Erik Steigler
+    email = erik.github@sublevo.com
+
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+	ui = auto
+
+[push]
+    default = matching
+
+[core]
+    editor = vim
+
+[merge]
+    tool = mvim
+
+[mergetool "mvim"]
+    cmd=mvim -d -g $LOCAL $MERGED $REMOTE
+    keepbackup=false
+
+[alias]
+    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --

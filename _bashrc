@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+# Include ~/bin and /usr/local/bin in the PATH
+export PATH=~/bin:/usr/local/bin:$PATH
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# Alias definitions.
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# If we have rbenv installed, lets use it
+if which -s rbenv; then eval "$(rbenv init -)"; fi
+
+# Setup a sane editor as the default
+if which -s gvim; then
+    EDITOR=gvim
+elif which -s vim; then
+    EDITOR=vim
+elif which -s vi; then
+    EDITOR=vi
+fi
+export EDITOR
+
+# Sure we have a color terminal
+export CLICOLOR=1
+
+# Setup gitbranch info function
+function git_branch {
+    git symbolic-ref -q --short HEAD 2>/dev/null | tr '\n' ' '
+}
+
+PS1="\u@\h \w \$(git_branch)\$ "
