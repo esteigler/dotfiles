@@ -5,7 +5,7 @@ function link_file {
 
     if [ -L "${target}" ]; then
         rm "${target}"
-    elif [ -e "${target}"]; then
+    elif [ -e "${target}" ]; then
         mv $target $target.bak
     fi
 
