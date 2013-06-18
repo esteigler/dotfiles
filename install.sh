@@ -3,7 +3,9 @@ function link_file {
     source="${PWD}/$1"
     target="${HOME}/${1/_/.}"
 
-    if [ -e "${target}" ]; then
+    if [ -L "${target}" ]; then
+        rm "${target}"
+    elif [ -e "${target}"]; then
         mv $target $target.bak
     fi
 
