@@ -31,6 +31,22 @@ set nocompatible
  
 syntax on
 
+filetype on                   " try to detect filetypes
+filetype plugin indent on     " enable loading indent file for filetype
+set title                     " show title in console title bar
+set wildmenu                  " Menu completion in command mode on <Tab>
+set wildmode=full             " <Tab> cycles between all matching choices.
+set wildignore+=*.o,*.obj,.git,*.pyc
+
+if exists("&colorcolumn")
+    set colorcolumn=79
+endif
+
+set showmatch               " Briefly jump to a paren once it's balanced
+set autoindent              " always set autoindenting on
+set shiftround              " rounds indent to a multiple of shiftwidth
+set matchpairs+=<:>         " show matching <> (html mainly) as well
+
 command W w
 command Wq wq
 command Q q
@@ -60,3 +76,5 @@ au BufRead,BufNewFile Vagrantfile set ft=ruby
 au FileType python setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4
 "au FileType python setlocal smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 "au BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
+
+autocmd FileType c,cpp,java,php,python,ruby,eruby,yaml autocmd BufWritePre <buffer> :%s/\s\+$//e
