@@ -38,3 +38,25 @@ command Wqa wqa
 
 " set bg=dark
 colorscheme torte
+
+
+" ===========================================================
+" FileType specific changes
+" ============================================================
+" Mako/HTML
+autocmd BufNewFile,BufRead *.mako,*.mak setlocal ft=html
+autocmd FileType html,xhtml,xml,css setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+
+" Ruby
+autocmd FileType ruby,eruby,yaml set autoindent shiftwidth=2 softtabstop=2 tabstop=2 expandtab
+autocmd FileType cucumber set autoindent tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+au BufRead,BufNewFile *.ru set ft=ruby
+au BufRead,BufNewFile Gemfile set ft=Ruby
+au BufRead,BufNewFile Gemfile set ft=ruby
+au BufRead,BufNewFile Capfile set ft=ruby
+au BufRead,BufNewFile Vagrantfile set ft=ruby
+
+" Python
+au FileType python setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4
+"au FileType python setlocal smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+"au BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
