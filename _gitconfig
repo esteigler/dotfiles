@@ -1,6 +1,7 @@
 [user]
     name = Erik Steigler
     email = erik.github@sublevo.com
+    signingkey = 67175C4DFD901EF1
 
 [color]
     diff = auto

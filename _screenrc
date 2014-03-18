@@ -1,0 +1,16 @@
+startup_message off
+hardstatus on
+hardstatus alwayslastline
+hardstatus string "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d %C%a "
+
+## detach on hangup
+autodetach on
+bindkey ^[[1;3D prev
+bindkey ^[[1;3C next
+
+bindkey ^@ copy
+
+defscrollback 15000
+defutf8 on
+
+utf8 on

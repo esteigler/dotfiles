@@ -78,3 +78,5 @@ au FileType python setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4
 "au BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
 
 autocmd FileType c,cpp,java,php,python,ruby,eruby,yaml autocmd BufWritePre <buffer> :%s/\s\+$//e
+
+execute pathogen#infect()
