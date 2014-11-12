@@ -53,8 +53,8 @@ command Q q
 command Wqa wqa
 
 " set bg=dark
-colorscheme torte
-
+" colorscheme torte
+colorscheme molokai
 
 " ===========================================================
 " FileType specific changes
