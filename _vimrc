@@ -72,6 +72,8 @@ au BufRead,BufNewFile Gemfile set ft=ruby
 au BufRead,BufNewFile Capfile set ft=ruby
 au BufRead,BufNewFile Vagrantfile set ft=ruby
 
+au BufRead,BufNewfile *.go set tabstop=4
+
 " Python
 au FileType python setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4
 "au FileType python setlocal smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
