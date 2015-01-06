@@ -4,7 +4,7 @@
 [ -z "$PS1" ] && return
 
 # Include ~/bin and /usr/local/bin in the PATH
-export PATH=~/bin:/usr/local/bin:$PATH
+export PATH=~/.rbenv/shims:~/.rbenv/bin:~/bin:/usr/local/bin:$PATH
 
 # append to the history file, don't overwrite it
 shopt -s histappend
@@ -32,6 +32,16 @@ export EDITOR
 
 # Sure we have a color terminal
 export CLICOLOR=1
+
+# Aliases
+alias sail='cd ~/Code/sailthru'
+alias sailthru='cd ~/Code/sailthru'
+
+alias shop='cd ~/Code/shopalytic'
+alias shopalytic='cd ~/Code/shopalytic'
+
+alias lot='cd ~/Code/lot18'
+alias lot18='cd ~/Code/lot18'
 
 # Setup gitbranch info function
 function git_branch {
