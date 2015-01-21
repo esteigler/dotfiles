@@ -26,6 +26,8 @@
     lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 [github]
 	site = https://github.com
-	endpoint = https://api.github.com
+    endpoint = https://api.github.com
 [reflow]
 	git-server = GitHub
+[credential]
+	helper = osxkeychain

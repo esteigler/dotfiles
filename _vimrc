@@ -81,4 +81,9 @@ au FileType python setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4
 
 autocmd FileType c,cpp,java,php,python,ruby,eruby,yaml autocmd BufWritePre <buffer> :%s/\s\+$//e
 
+augroup markdown
+    au!
+    au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
+augroup END
+
 execute pathogen#infect()

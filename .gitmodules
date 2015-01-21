@@ -4,3 +4,6 @@
 [submodule "_vim/bundle/vim-ansible-yaml"]
 	path = _vim/bundle/vim-ansible-yaml
 	url = https://github.com/chase/vim-ansible-yaml.git
+[submodule "_vim/bundle/vim-flavored-markdown"]
+	path = _vim/bundle/vim-flavored-markdown
+	url = git@github.com:jtratner/vim-flavored-markdown.git
