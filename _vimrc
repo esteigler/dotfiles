@@ -52,6 +52,8 @@ command Wq wq
 command Q q
 command Wqa wqa
 
+let mapleader=","
+
 " set bg=dark
 " colorscheme torte
 colorscheme molokai
@@ -85,5 +87,8 @@ augroup markdown
     au!
     au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
 augroup END
+
+let g:vimrubocop_keymap = 0
+nmap <Leader>r :RuboCop<CR>
 
 execute pathogen#infect()

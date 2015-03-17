@@ -3,8 +3,11 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
+# Export GoPath
+export GOPATH=$HOME/go
+
 # Include ~/bin and /usr/local/bin in the PATH
-export PATH=~/.rbenv/shims:~/.rbenv/bin:~/bin:/usr/local/bin:$PATH
+export PATH=~/.rbenv/shims:~/.rbenv/bin:~/bin:$GOPATH/bin:/usr/local/bin:$PATH
 
 # append to the history file, don't overwrite it
 shopt -s histappend
