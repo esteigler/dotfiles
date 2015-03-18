@@ -10,3 +10,6 @@
 [submodule "_vim/bundle/vim-rubocop"]
 	path = _vim/bundle/vim-rubocop
 	url = https://github.com/ngmy/vim-rubocop.git
+[submodule "_vim/bundle/vim-jinja2-syntax"]
+	path = _vim/bundle/vim-jinja2-syntax
+	url = git@github.com:Glench/Vim-Jinja2-Syntax.git
