@@ -13,4 +13,4 @@ bindkey ^@ copy
 defscrollback 15000
 defutf8 on
 
-utf8 on
+setenv SSH_AUTH_SOCK $HOME/.ssh/ssh_auth_sock
