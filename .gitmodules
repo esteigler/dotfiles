@@ -13,3 +13,9 @@
 [submodule "_vim/bundle/vim-jinja2-syntax"]
 	path = _vim/bundle/vim-jinja2-syntax
 	url = git@github.com:Glench/Vim-Jinja2-Syntax.git
+[submodule "_vim/bundle/vim-rails"]
+	path = _vim/bundle/vim-rails
+	url = git://github.com/tpope/vim-rails.git
+[submodule "_vim/bundle/vim-bundler"]
+	path = _vim/bundle/vim-bundler
+	url = git://github.com/tpope/vim-bundler.git
