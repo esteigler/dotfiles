@@ -15,6 +15,9 @@ shopt -s histappend
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
+# Get rid of ctrl-o binding on os x
+stty discard undef
+
 # Alias definitions.
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
@@ -46,6 +49,8 @@ alias shopalytic='cd ~/Code/shopalytic'
 alias lot='cd ~/Code/lot18'
 alias lot18='cd ~/Code/lot18'
 
+alias pen='cd ~/Code/penrose'
+
 # Setup gitbranch info function
 function git_branch {
     git_branch_var=$(git symbolic-ref -q --short HEAD 2>/dev/null)
@@ -55,8 +60,6 @@ function git_branch {
 }
 
 PS1="[\u@\h \w] \$(git_branch)\$ "
-
-alias vssh='ssh -i ~/.vagrant.d/insecure_private_key vagrant@$(grep -Eo "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" Vagrantfile)'
 
 if [ -S "$SSH_AUTH_SOCK" ] && [ ! -h "$SSH_AUTH_SOCK" ]; then
     ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
