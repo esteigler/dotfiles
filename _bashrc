@@ -40,9 +40,6 @@ export EDITOR
 export CLICOLOR=1
 
 # Aliases
-alias sail='cd ~/Code/sailthru'
-alias sailthru='cd ~/Code/sailthru'
-
 alias shop='cd ~/Code/shopalytic'
 alias shopalytic='cd ~/Code/shopalytic'
 
