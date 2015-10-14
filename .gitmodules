@@ -19,3 +19,6 @@
 [submodule "_vim/bundle/vim-bundler"]
 	path = _vim/bundle/vim-bundler
 	url = git://github.com/tpope/vim-bundler.git
+[submodule "_vim/bundle/vim-simple-todo"]
+	path = _vim/bundle/vim-simple-todo
+	url = https://github.com/vitalk/vim-simple-todo.git
