@@ -22,3 +22,9 @@
 [submodule "_vim/bundle/vim-simple-todo"]
 	path = _vim/bundle/vim-simple-todo
 	url = https://github.com/vitalk/vim-simple-todo.git
+[submodule "_vim/bundle/vim-outliner"]
+	path = _vim/bundle/vim-outliner
+	url = https://github.com/vimoutliner/vimoutliner.git
+[submodule "_vim/bundle/vim-rabl"]
+	path = _vim/bundle/vim-rabl
+	url = https://github.com/yaymukund/vim-rabl.git
