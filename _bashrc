@@ -48,6 +48,10 @@ alias lot18='cd ~/Code/lot18'
 
 alias pen='cd ~/Code/penrose'
 
+alias json='python -mjson.tool'
+
+alias bc='bc -ql'
+
 # Setup gitbranch info function
 function git_branch {
     git_branch_var=$(git symbolic-ref -q --short HEAD 2>/dev/null)

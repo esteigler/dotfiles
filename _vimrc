@@ -53,6 +53,7 @@ command Q q
 command Wqa wqa
 
 let mapleader=","
+let maplocalleader = '\\'
 
 " set bg=dark
 " colorscheme torte
