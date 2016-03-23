@@ -11,12 +11,41 @@ export PATH=~/.rbenv/shims:~/.rbenv/bin:~/bin:$GOPATH/bin:/usr/local/bin:$PATH
 
 # append to the history file, don't overwrite it
 shopt -s histappend
+
+# More history options
+HISTSIZE=1000000
+HISTFILESIZE=1000000000
+
+# Skip some commands
+HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear"
+
+# Avoid duplicate entries
+HISTCONTROL="erasedups:ignoreboth"
+
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
 # Get rid of ctrl-o binding on os x
 stty discard undef
+
+# Prepend cd to directory names automatically
+shopt -s autocd 2> /dev/null
+# Correct spelling errors during tab-completion
+shopt -s dirspell 2> /dev/null
+# Correct spelling errors in arguments supplied to cd
+shopt -s cdspell 2> /dev/null
+
+## SMARTER TAB-COMPLETION (Readline bindings) ##
+
+# Perform file completion in a case insensitive fashion
+bind "set completion-ignore-case on"
+
+# Treat hyphens and underscores as equivalent
+bind "set completion-map-case on"
+
+# Display matches for ambiguous patterns at first tab press
+bind "set show-all-if-ambiguous on"
 
 # Alias definitions.
 if [ -f ~/.bash_aliases ]; then
