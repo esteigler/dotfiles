@@ -96,12 +96,14 @@ if [ -S "$SSH_AUTH_SOCK" ] && [ ! -h "$SSH_AUTH_SOCK" ]; then
 fi
 export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 
-if which -s b64encode; then
-    _BASE64="b64encode -r -"
-else
-    _BASE64="base64"
-fi
+#if which -s b64encode; then
+#    _BASE64="b64encode -r -"
+#else
+#    _BASE64="base64"
+#fi
 
-printf "\e]1337;SetBadgeFormat=%s\a" $(hostname -s | $_BASE64)
+#printf "\e]1337;SetBadgeFormat=%s\a" $(hostname -s | $_BASE64)
 
 #eval $(docker-machine env default)
+
+alias writeday='$EDITOR $(date +%F).txt'
