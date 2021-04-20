@@ -28,3 +28,6 @@
 [submodule "_vim/bundle/vim-rabl"]
 	path = _vim/bundle/vim-rabl
 	url = https://github.com/yaymukund/vim-rabl.git
+[submodule "_vim/bundle/ale"]
+	path = _vim/bundle/ale
+	url = https://github.com/dense-analysis/ale.git
