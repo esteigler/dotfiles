@@ -31,3 +31,6 @@
 [submodule "_vim/bundle/ale"]
 	path = _vim/bundle/ale
 	url = https://github.com/dense-analysis/ale.git
+[submodule "_vim/bundle/vim-markdown"]
+	path = _vim/bundle/vim-markdown
+	url = https://github.com/plasticboy/vim-markdown.git
