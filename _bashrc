@@ -3,18 +3,82 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# Export GoPath
-export GOPATH=$HOME/go
+# Find out where our files are if possible
+_TMP_REPO_PATH="$(dirname $(readlink ~/.bashrc))"
 
-# Include ~/bin and /usr/local/bin in the PATH
-export PATH=~/.rbenv/shims:~/.rbenv/bin:~/bin:$GOPATH/bin:/usr/local/bin:$PATH
+# Check what OS we are on and include the correct config
+case "$OSTYPE" in
+  darwin*)  source "$_TMP_REPO_PATH/bash.d/osx.bash" ;;
+  bsd*)     source "$_TMP_REPO_PATH/bash.d/bsd.bash" ;;
+#  solaris*) echo "SOLARIS" ;;
+#  linux*)   echo "LINUX" ;;
+#  msys*)    echo "WINDOWS" ;;
+#  cygwin*)  echo "ALSO WINDOWS" ;;
+#  *)        echo "unknown: $OSTYPE" ;;
+esac
 
+# If we have rbenv installed, lets use it
+if which -s rbenv; then
+  eval "$(rbenv init -)"
+fi
+
+if [ -S "$SSH_AUTH_SOCK" ] && [ ! -h "$SSH_AUTH_SOCK" ]; then
+    ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+fi
+export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+
+# Setup a sane editor as the default
+if which -s gvim; then
+    EDITOR=gvim
+elif which -s vim; then
+    EDITOR=vim
+elif which -s vi; then
+    EDITOR=vi
+fi
+export EDITOR
+
+# Alias definitions.
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# First check if git even exists here
+if which -s git; then
+  # Now install the auto completes if we can find them
+  if [ -d "$_TMP_REPO_PATH/git" ]; then
+    source "$_TMP_REPO_PATH/git/git-completion.bash"
+    source "$_TMP_REPO_PATH/git/git-prompt.sh"
+    GIT_PS1_SHOWCOLORHINTS=1
+    PROMPT_COMMAND='__git_ps1 "[\u@\h:\w]" "\\\$ "'
+  fi
+fi
+
+#green="\001$(tput setaf 2)\002"
+#blue="\001$(tput setaf 4)\002"
+#dim="\001$(tput dim)\002"
+#reset="\001$(tput sgr0)\002"
+#
+#PS1="$dim[\t] " # [hh:mm:ss]
+#PS1+="$green\u@\h" # user@host
+#PS1+="$blue\w\$$reset " # workingdir$
+
+#export PS1
+unset $_TMP_REPO_PATH
+
+###
+### Normal Bash settings below
+###
+
+# Enable Color
+export CLICOLOR=1
+
+## History Settings
 # append to the history file, don't overwrite it
 shopt -s histappend
 
 # More history options
-HISTSIZE=1000000
-HISTFILESIZE=1000000000
+HISTSIZE=100000
+HISTFILESIZE=5000000
 
 # Skip some commands
 HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear"
@@ -37,7 +101,6 @@ shopt -s dirspell 2> /dev/null
 shopt -s cdspell 2> /dev/null
 
 ## SMARTER TAB-COMPLETION (Readline bindings) ##
-
 # Perform file completion in a case insensitive fashion
 bind "set completion-ignore-case on"
 
@@ -46,64 +109,3 @@ bind "set completion-map-case on"
 
 # Display matches for ambiguous patterns at first tab press
 bind "set show-all-if-ambiguous on"
-
-# Alias definitions.
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
-
-# If we have rbenv installed, lets use it
-if which -s rbenv; then eval "$(rbenv init -)"; fi
-
-# Setup a sane editor as the default
-if which -s gvim; then
-    EDITOR=gvim
-elif which -s vim; then
-    EDITOR=vim
-elif which -s vi; then
-    EDITOR=vi
-fi
-export EDITOR
-
-# Sure we have a color terminal
-export CLICOLOR=1
-
-# Aliases
-alias shop='cd ~/Code/shopalytic'
-alias shopalytic='cd ~/Code/shopalytic'
-
-alias lot='cd ~/Code/lot18'
-alias lot18='cd ~/Code/lot18'
-
-alias pen='cd ~/Code/penrose'
-
-alias json='python -mjson.tool'
-
-alias bc='bc -ql'
-
-# Setup gitbranch info function
-function git_branch {
-    git_branch_var=$(git symbolic-ref -q --short HEAD 2>/dev/null)
-    if [ $git_branch_var ]; then
-        echo "($git_branch_var) "
-    fi
-}
-
-PS1="[\u@\h \w] \$(git_branch)\$ "
-
-if [ -S "$SSH_AUTH_SOCK" ] && [ ! -h "$SSH_AUTH_SOCK" ]; then
-    ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
-fi
-export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
-
-#if which -s b64encode; then
-#    _BASE64="b64encode -r -"
-#else
-#    _BASE64="base64"
-#fi
-
-#printf "\e]1337;SetBadgeFormat=%s\a" $(hostname -s | $_BASE64)
-
-#eval $(docker-machine env default)
-
-alias writeday='$EDITOR $(date +%F).txt'

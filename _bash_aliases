@@ -1,0 +1,8 @@
+# Various aliases
+
+# General
+alias bc='bc -ql'
+alias json='python -mjson.tool'
+
+# Laptop
+alias pen='cd ~/Code/penrose'
