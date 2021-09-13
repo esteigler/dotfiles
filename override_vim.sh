@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-if [ -e ~/Applications/MacVim.app ]; then
-    ln -is $(pwd)/bin/mvim /usr/local/bin/vim
-    ln -is $(pwd)/bin/mvim /usr/local/bin/vimdiff
-    ln -is $(pwd)/bin/mvim /usr/local/bin/mvim
-    ln -is $(pwd)/bin/mvim /usr/local/bin/mvimdiff
-    ln -is $(pwd)/bin/mvim /usr/local/bin/gvim
-    ln -is $(pwd)/bin/mvim /usr/local/bin/gvimdiff
+if [ -e /Applications/MacVim.app ]; then
+    for f in /Applications/MacVim.app/Contents/bin/*
+    do
+        ln -is $f /usr/local/bin/
+    done
 fi
