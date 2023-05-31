@@ -20,6 +20,11 @@ if [ -x "/opt/homebrew/bin/brew" ]; then
   fi
 fi
 
+if [ -x "/opt/homebrew/bin/go" ]; then
+  export GOPATH="$HOME/.go"
+  PATH="$PATH:$GOPATH/bin"
+fi
+
 # Setup the Python world
 if [ -f ~/.venv/bin/activate ]; then
   source ~/.venv/bin/activate
