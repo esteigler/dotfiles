@@ -17,6 +17,10 @@ case "$OSTYPE" in
 #  *)        echo "unknown: $OSTYPE" ;;
 esac
 
+if [ -f "$_TMP_REPO_PATH/bash.d/secrets.sh" ]; then
+  source "$_TMP_REPO_PATH/bash.d/secrets.sh"
+fi
+
 # If we have rbenv installed, lets use it
 if which -s rbenv; then
   eval "$(rbenv init -)"
