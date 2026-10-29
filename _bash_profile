@@ -1,3 +1,10 @@
 #!/usr/bin/env bash
 
 [[ -s ~/.bashrc ]] && source ~/.bashrc
+
+# iTerm2 shell integration (marks, cwd reporting). Must load after .bashrc
+# so it wraps PROMPT_COMMAND instead of being clobbered by the prompt setup
+# there, per https://iterm2.com/documentation-shell-integration.html.
+if [[ $OSTYPE == darwin* ]]; then
+  test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+fi
