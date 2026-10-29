@@ -1,36 +1,16 @@
-[submodule "_vim/bundle/syntastic"]
-	path = _vim/bundle/syntastic
-	url = https://github.com/scrooloose/syntastic.git
-[submodule "_vim/bundle/vim-ansible-yaml"]
-	path = _vim/bundle/vim-ansible-yaml
-	url = https://github.com/chase/vim-ansible-yaml.git
-[submodule "_vim/bundle/vim-flavored-markdown"]
-	path = _vim/bundle/vim-flavored-markdown
-	url = git@github.com:jtratner/vim-flavored-markdown.git
-[submodule "_vim/bundle/vim-rubocop"]
-	path = _vim/bundle/vim-rubocop
-	url = https://github.com/ngmy/vim-rubocop.git
-[submodule "_vim/bundle/vim-jinja2-syntax"]
-	path = _vim/bundle/vim-jinja2-syntax
-	url = git@github.com:Glench/Vim-Jinja2-Syntax.git
-[submodule "_vim/bundle/vim-rails"]
-	path = _vim/bundle/vim-rails
-	url = git://github.com/tpope/vim-rails.git
-[submodule "_vim/bundle/vim-bundler"]
-	path = _vim/bundle/vim-bundler
-	url = git://github.com/tpope/vim-bundler.git
-[submodule "_vim/bundle/vim-simple-todo"]
-	path = _vim/bundle/vim-simple-todo
-	url = https://github.com/vitalk/vim-simple-todo.git
-[submodule "_vim/bundle/vim-outliner"]
-	path = _vim/bundle/vim-outliner
-	url = https://github.com/vimoutliner/vimoutliner.git
-[submodule "_vim/bundle/vim-rabl"]
-	path = _vim/bundle/vim-rabl
-	url = https://github.com/yaymukund/vim-rabl.git
-[submodule "_vim/bundle/ale"]
-	path = _vim/bundle/ale
+[submodule "_vim/pack/plugins/start/ale"]
+	path = _vim/pack/plugins/start/ale
 	url = https://github.com/dense-analysis/ale.git
-[submodule "_vim/bundle/vim-markdown"]
-	path = _vim/bundle/vim-markdown
-	url = https://github.com/plasticboy/vim-markdown.git
+	ignore = untracked
+[submodule "_vim/pack/plugins/start/vim-bundler"]
+	path = _vim/pack/plugins/start/vim-bundler
+	url = https://github.com/tpope/vim-bundler.git
+	ignore = untracked
+[submodule "_vim/pack/plugins/start/vim-markdown"]
+	path = _vim/pack/plugins/start/vim-markdown
+	url = https://github.com/preservim/vim-markdown.git
+	ignore = untracked
+[submodule "_vim/pack/plugins/start/vim-rails"]
+	path = _vim/pack/plugins/start/vim-rails
+	url = https://github.com/tpope/vim-rails.git
+	ignore = untracked

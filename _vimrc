@@ -84,22 +84,4 @@ au FileType python setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4
 
 autocmd FileType c,cpp,java,php,python,ruby,eruby,yaml autocmd BufWritePre <buffer> :%s/\s\+$//e
 
-augroup markdown
-    au!
-    au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
-augroup END
-
-let g:vimrubocop_keymap = 0
-nmap <Leader>r :RuboCop<CR>
-
-execute pathogen#infect()
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 1
-let g:syntastic_ruby_checkers = ['rubocop', 'mri']
+let g:vim_markdown_folding_disabled = 1
