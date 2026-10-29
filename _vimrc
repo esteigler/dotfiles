@@ -73,13 +73,64 @@ command! -bang Q q<bang>
 "" Plugins
 let g:vim_markdown_folding_disabled = 1
 
-"" Strip trailing whitespace on save for these filetypes
-let s:strip_filetypes = ['c', 'cpp', 'java', 'php', 'python', 'ruby', 'eruby', 'yaml']
-function! s:StripTrailingWhitespace() abort
-  let l:view = winsaveview()
-  keeppatterns %s/\s\+$//e
-  call winrestview(l:view)
+" ALE: linters for python (ruff), ruby (rubocop), php (php -l + phpcs), go
+" (gofmt/govet/golangci-lint), javascript/typescript (eslint), shell
+" (shellcheck), yaml (yamllint), json (python's json.tool) and markdown
+" (markdownlint-cli). Each tool runs only if its executable is on $PATH; a
+" missing tool is skipped silently. g:ale_linters_explicit means only these
+" run, nothing else ALE happens to find installed.
+
+" json.tool instead of jq/jsonlint: every host here already needs python,
+" so this adds no new dependency. Its "<message>: line N column M" errors
+" are parsed below; also usable as a formatter via :ALEFix json_pytool.
+call ale#Set('json_pytool_executable', 'python3')
+function! s:HandleJsonToolErrors(buffer, lines) abort
+  let l:pattern = '^\(.\+\): line \(\d\+\) column \(\d\+\)'
+  return ale#util#MapMatches(a:lines, l:pattern, {match -> {
+        \ 'text': match[1],
+        \ 'lnum': match[2] + 0,
+        \ 'col': match[3] + 0,
+        \}})
 endfunction
+call ale#linter#Define('json', {
+      \ 'name': 'json_pytool',
+      \ 'executable': {b -> ale#Var(b, 'json_pytool_executable')},
+      \ 'output_stream': 'stderr',
+      \ 'command': '%e -m json.tool',
+      \ 'callback': function('s:HandleJsonToolErrors'),
+      \})
+
+let g:ale_linters_explicit = 1
+let g:ale_linters = {
+      \ 'python': ['ruff'],
+      \ 'ruby': ['rubocop'],
+      \ 'php': ['php', 'phpcs'],
+      \ 'go': ['gofmt', 'govet', 'golangci-lint'],
+      \ 'javascript': ['eslint'],
+      \ 'typescript': ['eslint'],
+      \ 'sh': ['shellcheck'],
+      \ 'yaml': ['yamllint'],
+      \ 'json': ['json_pytool'],
+      \ 'markdown': ['markdownlint_cli'],
+      \}
+
+" Fixers limited to each ecosystem's own canonical, idempotent formatter so
+" fix-on-save never does more than a human running that formatter by hand
+" would. Everything else just gets the '*' whitespace cleanup below. Run
+" other fixers (e.g. eslint) on demand with :ALEFix <name>.
+let g:ale_fixers = {
+      \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+      \ 'python': ['ruff', 'ruff_format'],
+      \ 'ruby': ['rubocop'],
+      \ 'go': ['gofmt', 'goimports'],
+      \ 'sh': ['shfmt'],
+      \}
+let g:ale_fix_on_save = 1
+let g:ale_virtualtext_cursor = 'current'
+
+nmap <silent> [g <Plug>(ale_previous_wrap)
+nmap <silent> ]g <Plug>(ale_next_wrap)
+nnoremap <Leader>f :ALEFix<CR>
 
 augroup vimrc
   autocmd!
@@ -89,13 +140,14 @@ augroup vimrc
   " Not detected by the runtime (Gemfile, *.ru, Vagrantfile, Rakefile are).
   autocmd BufRead,BufNewFile *.mako setfiletype html
   autocmd BufRead,BufNewFile Capfile setfiletype ruby
+  " React filetypes aren't bundled with Vim; reuse JS/TS so ALE's eslint
+  " linter (registered only for 'javascript'/'typescript') still applies.
+  autocmd BufRead,BufNewFile *.jsx setfiletype javascript
+  autocmd BufRead,BufNewFile *.tsx setfiletype typescript
 
   autocmd FileType html,xhtml,xml,css,ruby,eruby,yaml,cucumber
         \ setlocal expandtab shiftwidth=2 softtabstop=2 tabstop=2
   autocmd FileType python setlocal expandtab shiftwidth=4 softtabstop=4 tabstop=8
   " ftplugin/go.vim already sets noexpandtab shiftwidth=0 softtabstop=0.
   autocmd FileType go setlocal tabstop=4
-
-  autocmd BufWritePre *
-        \ if index(s:strip_filetypes, &filetype) >= 0 | call s:StripTrailingWhitespace() | endif
 augroup END
