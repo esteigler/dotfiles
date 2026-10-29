@@ -12,6 +12,14 @@
 	autoSetupRemote = true
 [pull]
 	rebase = false
+[fetch]
+	prune = true
+[rerere]
+	enabled = true
+[diff]
+	algorithm = histogram
+[branch]
+	sort = -committerdate
 [merge]
 	tool = vimdiff
 [mergetool]
