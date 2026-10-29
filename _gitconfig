@@ -1,36 +1,19 @@
 [user]
-    name = Erik Steigler
-    email = esteigler@users.noreply.github.com
-    signingkey = 67175C4DFD901EF1
-    username = esteigler
-
-[color]
-    diff = auto
-    status = auto
-    branch = auto
-	ui = auto
-
-[push]
-    default = matching
-
+	name = Erik Steigler
+	email = esteigler@users.noreply.github.com
+	signingkey = 67175C4DFD901EF1
+	username = esteigler
 [core]
-    editor = vim
-
-[merge]
-    tool = mvim
-
-[mergetool "mvim"]
-    cmd=mvim -d -g $LOCAL $MERGED $REMOTE
-    keepbackup=false
-
-[alias]
-    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
-[github]
-	site = https://github.com
-    endpoint = https://api.github.com
-[reflow]
-	git-server = GitHub
-[credential]
-	helper = osxkeychain
+	editor = vim
+[init]
+	defaultBranch = main
+[push]
+	default = simple
 [pull]
 	rebase = false
+[merge]
+	tool = vimdiff
+[mergetool]
+	keepBackup = false
+[alias]
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --

@@ -10,7 +10,7 @@ STAMP=$(date +%Y%m%d%H%M%S)
 
 # repo-relative source:$HOME-relative target
 VIM_LINKS="_vim:.vim _vimrc:.vimrc"
-ALL_LINKS="$VIM_LINKS _bashrc:.bashrc _bash_profile:.bash_profile _bash_aliases:.bash_aliases _inputrc:.inputrc _gemrc:.gemrc _screenrc:.screenrc _gitconfig:.gitconfig"
+ALL_LINKS="$VIM_LINKS _bashrc:.bashrc _bash_profile:.bash_profile _bash_aliases:.bash_aliases _inputrc:.inputrc _gemrc:.gemrc _screenrc:.screenrc _gitconfig:.config/git/config"
 
 link_file() {
   local source="$REPO/$1" target="$HOME/$2"
@@ -28,6 +28,19 @@ link_file() {
   echo "linked $target -> $source"
 }
 
+# ~/.gitconfig is machine-local (credential helpers, overrides); `git config --global` writes there.
+ensure_local_gitconfig() {
+  local f="$HOME/.gitconfig"
+  if [ -L "$f" ]; then
+    case "$(readlink "$f")" in
+      "$REPO"/*) rm "$f" ;;   # left over from installs that linked it into the repo
+    esac
+  fi
+  if [ ! -e "$f" ]; then
+    printf '%s\n' '# Machine-local git config; shared settings live in ~/.config/git/config.' > "$f"
+  fi
+}
+
 links=$ALL_LINKS
 if [ "${1:-}" = vim ]; then
   links=$VIM_LINKS
@@ -35,6 +48,10 @@ fi
 for pair in $links; do
   link_file "${pair%%:*}" "${pair#*:}"
 done
+
+if [ "${1:-}" != vim ]; then
+  ensure_local_gitconfig
+fi
 
 cd "$REPO"
 git submodule sync --recursive
