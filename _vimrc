@@ -107,7 +107,9 @@ let g:ale_linters = {
       \ 'php': ['php', 'phpcs'],
       \ 'go': ['gofmt', 'govet', 'golangci-lint'],
       \ 'javascript': ['eslint'],
+      \ 'javascriptreact': ['eslint'],
       \ 'typescript': ['eslint'],
+      \ 'typescriptreact': ['eslint'],
       \ 'sh': ['shellcheck'],
       \ 'yaml': ['yamllint'],
       \ 'json': ['json_pytool'],
@@ -140,10 +142,6 @@ augroup vimrc
   " Not detected by the runtime (Gemfile, *.ru, Vagrantfile, Rakefile are).
   autocmd BufRead,BufNewFile *.mako setfiletype html
   autocmd BufRead,BufNewFile Capfile setfiletype ruby
-  " React filetypes aren't bundled with Vim; reuse JS/TS so ALE's eslint
-  " linter (registered only for 'javascript'/'typescript') still applies.
-  autocmd BufRead,BufNewFile *.jsx setfiletype javascript
-  autocmd BufRead,BufNewFile *.tsx setfiletype typescript
 
   autocmd FileType html,xhtml,xml,css,ruby,eruby,yaml,cucumber
         \ setlocal expandtab shiftwidth=2 softtabstop=2 tabstop=2
