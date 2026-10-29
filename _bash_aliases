@@ -4,5 +4,10 @@
 alias bc='bc -ql'
 alias json='python -mjson.tool'
 
+# Use uv's managed interpreter/venv when uv is available.
+if __df_have uv; then
+  alias python='uv run python'
+fi
+
 # Laptop
 alias pen='cd ~/Code/penrose'
