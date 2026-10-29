@@ -1,35 +1,29 @@
-# Setup the OS X specific configuration stuff here
+# macOS specifics (sourced by ~/.bashrc).
 
-if [ -d "/Applications/MacVim.app/Contents/bin" ]; then
-  PATH="/Applications/MacVim.app/Contents/bin:$PATH"
-fi
+# MacVim command-line tools (vim, mvim, gvim, vimdiff); Homebrew below takes precedence.
+__df_path_prepend /Applications/MacVim.app/Contents/bin
 
-# Setup brew paths
-if [ -x "/opt/homebrew/bin/brew" ]; then
+if [ -x /opt/homebrew/bin/brew ]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 
-  # Since we have homebrew, let's configure the ruby options
   export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$HOMEBREW_PREFIX/opt/openssl"
-  
-  # Point compilers and such to the homebrew libpq version
+
+  # Point compilers at Homebrew's libpq.
   if [ -d "$HOMEBREW_PREFIX/opt/libpq" ]; then
     export LDFLAGS="-L$HOMEBREW_PREFIX/opt/libpq/lib"
     export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/libpq/include"
     export PKG_CONFIG_PATH="$HOMEBREW_PREFIX/opt/libpq/lib/pkgconfig"
-    PATH="$HOMEBREW_PREFIX/opt/libpq/bin:$PATH"
+    __df_path_prepend "$HOMEBREW_PREFIX/opt/libpq/bin"
+  fi
+
+  if [ -x "$HOMEBREW_PREFIX/bin/go" ]; then
+    export GOPATH="$HOME/.go"
+    # Appended even before the directory exists, so `go install` results work immediately.
+    case ":$PATH:" in *":$GOPATH/bin:"*) ;; *) PATH="$PATH:$GOPATH/bin" ;; esac
   fi
 fi
 
-if [ -x "/opt/homebrew/bin/go" ]; then
-  export GOPATH="$HOME/.go"
-  PATH="$PATH:$GOPATH/bin"
+# Default Python virtualenv.
+if [ -f "$HOME/.venv/bin/activate" ]; then
+  . "$HOME/.venv/bin/activate"
 fi
-
-# Setup the Python world
-if [ -f ~/.venv/bin/activate ]; then
-  source ~/.venv/bin/activate
-fi
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

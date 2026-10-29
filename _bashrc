@@ -1,106 +1,142 @@
 #!/usr/bin/env bash
+# ~/.bashrc — shared by macOS (iTerm2, Homebrew bash), Linux and FreeBSD.
+# Symlinked by install.sh; ~/.bash_profile sources this file.
 
-# If not running interactively, don't do anything
-[ -z "$PS1" ] && return
-
-# Find out where our files are if possible
-_TMP_REPO_PATH="$(dirname $(readlink ~/.bashrc))"
-#_TMP_REPO_PATH="/home/erik/Code/dotfiles"
-
-# Check what OS we are on and include the correct config
-case "$OSTYPE" in
-  darwin*)  source "$_TMP_REPO_PATH/bash.d/osx.bash" ;;
-  bsd*)     source "$_TMP_REPO_PATH/bash.d/bsd.bash" ;;
-#  solaris*) echo "SOLARIS" ;;
-  linux*)   source "$_TMP_REPO_PATH/bash.d/linux.bash" ;;
-#  msys*)    echo "WINDOWS" ;;
-#  cygwin*)  echo "ALSO WINDOWS" ;;
-#  *)        echo "unknown: $OSTYPE" ;;
+# Interactive shells only.
+case $- in
+  *i*) ;;
+  *) return ;;
 esac
 
-if [ -f "$_TMP_REPO_PATH/bash.d/secrets.sh" ]; then
-  source "$_TMP_REPO_PATH/bash.d/secrets.sh"
+# Repo directory, resolved through the ~/.bashrc symlink.
+_dotfiles=${BASH_SOURCE[0]}
+[ -L "$_dotfiles" ] && _dotfiles=$(readlink "$_dotfiles")
+_dotfiles=$(cd "$(dirname "$_dotfiles")" && pwd -P)
+
+__df_have() { command -v "$1" >/dev/null 2>&1; }
+# Add an existing directory to PATH once (nested shells, tmux panes).
+__df_path_prepend() {
+  [ -d "$1" ] || return 0
+  case ":$PATH:" in *":$1:"*) ;; *) PATH="$1:$PATH" ;; esac
+}
+__df_path_append() {
+  [ -d "$1" ] || return 0
+  case ":$PATH:" in *":$1:"*) ;; *) PATH="$PATH:$1" ;; esac
+}
+
+### OS specifics (FreeBSD needs nothing beyond the shared settings)
+case $OSTYPE in
+  darwin*) . "$_dotfiles/bash.d/osx.bash" ;;
+  linux*)  . "$_dotfiles/bash.d/linux.bash" ;;
+esac
+
+# Machine-local, untracked settings (tokens, host-only paths).
+if [ -f "$_dotfiles/bash.d/secrets.sh" ]; then
+  . "$_dotfiles/bash.d/secrets.sh"
 fi
 
-# If we have rbenv installed, lets use it
-if which -s rbenv; then
-  eval "$(rbenv init -)"
+### Language/tool managers, each only when installed
+__df_path_prepend "$HOME/.rbenv/bin"
+if __df_have rbenv; then
+  eval "$(rbenv init - bash)"
 fi
 
-if [ -S "$SSH_AUTH_SOCK" ] && [ ! -h "$SSH_AUTH_SOCK" ]; then
-    ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
-fi
-export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
-
-# Setup a sane editor as the default
-if which -s gvim; then
-    EDITOR=gvim
-elif which -s vim; then
-    EDITOR=vim
-elif which -s vi; then
-    EDITOR=vi
-fi
-export EDITOR
-
-# Alias definitions.
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
-
-# First check if git even exists here
-if which -s git; then
-  # Now install the auto completes if we can find them
-  if [ -d "$_TMP_REPO_PATH/git" ]; then
-    source "$_TMP_REPO_PATH/git/git-completion.bash"
-    source "$_TMP_REPO_PATH/git/git-prompt.sh"
-    GIT_PS1_SHOWCOLORHINTS=1
-    PROMPT_COMMAND='__git_ps1 "[\u@\h:\w]" "\\\$ "'
+if [ -s "$HOME/.nvm/nvm.sh" ]; then
+  export NVM_DIR="$HOME/.nvm"
+  . "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+else
+  __df_path_prepend "$HOME/.local/share/fnm"
+  if __df_have fnm; then
+    eval "$(fnm env --use-on-cd --shell bash)"
   fi
 fi
 
-#green="\001$(tput setaf 2)\002"
-#blue="\001$(tput setaf 4)\002"
-#dim="\001$(tput dim)\002"
-#reset="\001$(tput sgr0)\002"
-#
-#PS1="$dim[\t] " # [hh:mm:ss]
-#PS1+="$green\u@\h" # user@host
-#PS1+="$blue\w\$$reset " # workingdir$
+if [ -d "$HOME/.phpenv/bin" ]; then
+  export PHPENV_ROOT="$HOME/.phpenv"
+  __df_path_prepend "$PHPENV_ROOT/bin"
+  eval "$(phpenv init -)"
+fi
 
-#export PS1
-unset $_TMP_REPO_PATH
+if [ -d "$HOME/.qlty/bin" ]; then
+  export QLTY_INSTALL="$HOME/.qlty"
+  __df_path_prepend "$QLTY_INSTALL/bin"
+fi
 
-###
-### Normal Bash settings below
-###
+__df_path_append "$HOME/.lmstudio/bin"
+__df_path_prepend "$HOME/bin"
+__df_path_prepend "$HOME/.local/bin"
+export PATH
 
-# Enable Color
-export CLICOLOR=1
+### SSH agent: stable socket path so long-lived tmux/screen panes survive reconnects.
+# Exported before tmux starts, so tmux's update-environment copies the symlink path.
+if [ -d "$HOME/.ssh" ]; then
+  if [ -S "${SSH_AUTH_SOCK:-}" ] && [ ! -h "$SSH_AUTH_SOCK" ]; then
+    ln -sfn "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
+  fi
+  export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
+fi
 
-## History Settings
-# append to the history file, don't overwrite it
+### Editor (terminal vim; gvim would not block callers like crontab -e)
+if __df_have vim; then
+  EDITOR=vim
+else
+  EDITOR=vi
+fi
+export EDITOR
+
+### Aliases
+if [ -f "$HOME/.bash_aliases" ]; then
+  . "$HOME/.bash_aliases"
+fi
+
+### Programmable completion (Debian/Ubuntu, older distros, FreeBSD pkg, Homebrew bash-completion@2)
+if ! shopt -oq posix; then
+  for _f in /usr/share/bash-completion/bash_completion \
+            /etc/bash_completion \
+            /usr/local/share/bash-completion/bash_completion.sh \
+            /usr/local/share/bash-completion/bash_completion \
+            "${HOMEBREW_PREFIX:-/opt/homebrew}/etc/profile.d/bash_completion.sh"; do
+    if [ -r "$_f" ]; then
+      . "$_f"
+      break
+    fi
+  done
+  unset _f
+fi
+
+### Prompt: [user@host:dir] + git status; terminal/tmux pane title "user@host: dir"
+case $TERM in
+  xterm*|screen*|tmux*|rxvt*) _ps1_pre='\[\e]0;\u@\h: \w\a\][\u@\h:\w]' ;;
+  *) _ps1_pre='[\u@\h:\w]' ;;
+esac
+if __df_have git; then
+  . "$_dotfiles/git/git-completion.bash"
+  . "$_dotfiles/git/git-prompt.sh"
+  GIT_PS1_SHOWCOLORHINTS=1
+  PROMPT_COMMAND='history -a; __git_ps1 "$_ps1_pre" "\\\$ "'
+else
+  PS1="$_ps1_pre"'\$ '
+  PROMPT_COMMAND='history -a'
+fi
+
+### History (history -a above shares history across tmux panes)
 shopt -s histappend
-
-# More history options
 HISTSIZE=100000
 HISTFILESIZE=5000000
-
-# Skip some commands
 HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear"
-
-# Avoid duplicate entries
 HISTCONTROL="erasedups:ignoreboth"
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
+### Shell behaviour
+export CLICOLOR=1               # BSD/macOS ls colors
 shopt -s checkwinsize
+shopt -s autocd 2>/dev/null     # bare directory name cds into it
+shopt -s dirspell 2>/dev/null   # fix directory typos during completion
+shopt -s cdspell 2>/dev/null    # fix typos in cd arguments
+# Free Ctrl-O (tty "discard") for readline and vim.
+if [ -t 0 ]; then
+  stty discard undef 2>/dev/null
+fi
 
-# Get rid of ctrl-o binding on os x
-stty discard undef
-
-# Prepend cd to directory names automatically
-shopt -s autocd 2> /dev/null
-# Correct spelling errors during tab-completion
-shopt -s dirspell 2> /dev/null
-# Correct spelling errors in arguments supplied to cd
-shopt -s cdspell 2> /dev/null
+unset -f __df_have __df_path_prepend __df_path_append
+unset _dotfiles
