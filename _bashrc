@@ -114,6 +114,7 @@ if __df_have git; then
   . "$_dotfiles/git/git-completion.bash"
   . "$_dotfiles/git/git-prompt.sh"
   GIT_PS1_SHOWCOLORHINTS=1
+  GIT_PS1_OMITSPARSESTATE=1   # skip the `git config core.sparseCheckout` fork every prompt
   PROMPT_COMMAND='history -a; __git_ps1 "$_ps1_pre" "\\\$ "'
 else
   PS1="$_ps1_pre"'\$ '
