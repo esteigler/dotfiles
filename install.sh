@@ -10,7 +10,7 @@ STAMP=$(date +%Y%m%d%H%M%S)
 
 # repo-relative source:$HOME-relative target
 VIM_LINKS="_vim:.vim _vimrc:.vimrc"
-ALL_LINKS="$VIM_LINKS _bashrc:.bashrc _bash_profile:.bash_profile _bash_aliases:.bash_aliases _inputrc:.inputrc _gemrc:.gemrc _screenrc:.screenrc _gitconfig:.config/git/config _tmux.conf:.tmux.conf"
+ALL_LINKS="$VIM_LINKS _bashrc:.bashrc _bash_profile:.bash_profile _bash_aliases:.bash_aliases _inputrc:.inputrc _gemrc:.gemrc _screenrc:.screenrc _gitconfig:.config/git/config _tmux.conf:.tmux.conf _psql:.psqlrc"
 
 link_file() {
   local source="$REPO/$1" target="$HOME/$2"
