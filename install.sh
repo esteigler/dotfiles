@@ -1,32 +1,49 @@
 #!/usr/bin/env bash
-function link_file {
-    source="${PWD}/$1"
-    target="${HOME}/${1/_/.}"
+# Link dotfiles into $HOME and check out the pinned vim plugins.
+#   ./install.sh       link everything
+#   ./install.sh vim   link only the vim files
+# Update plugins: git submodule update --remote && git commit -am 'tools: update vim plugins'
+set -eu
 
-    if [ -L "${target}" ]; then
-        rm "${target}"
-    elif [ -e "${target}" ]; then
-        mv $target $target.bak
+REPO=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
+STAMP=$(date +%Y%m%d%H%M%S)
+
+# repo-relative source:$HOME-relative target
+VIM_LINKS="_vim:.vim _vimrc:.vimrc"
+ALL_LINKS="$VIM_LINKS _bashrc:.bashrc _bash_profile:.bash_profile _bash_aliases:.bash_aliases _inputrc:.inputrc _gemrc:.gemrc _screenrc:.screenrc _gitconfig:.gitconfig"
+
+link_file() {
+  local source="$REPO/$1" target="$HOME/$2"
+  mkdir -p "$(dirname "$target")"
+  if [ -L "$target" ]; then
+    if [ "$(readlink "$target")" = "$source" ]; then
+      return 0
     fi
-
-    ln -sf ${source} ${target}
+    rm "$target"
+  elif [ -e "$target" ]; then
+    mv "$target" "$target.bak.$STAMP"
+    echo "backed up $target -> $target.bak.$STAMP"
+  fi
+  ln -s "$source" "$target"
+  echo "linked $target -> $source"
 }
 
-if [ "$1" = "vim" ]; then
-    for i in _vim*
-    do
-       link_file $i
-    done
-else
-    for i in _*
-    do
-        link_file $i
-    done
+links=$ALL_LINKS
+if [ "${1:-}" = vim ]; then
+  links=$VIM_LINKS
 fi
+for pair in $links; do
+  link_file "${pair%%:*}" "${pair#*:}"
+done
 
-git submodule sync
-git submodule init
-git submodule update
-git submodule foreach git pull origin master
-git submodule foreach git submodule init
-git submodule foreach git submodule update
+cd "$REPO"
+git submodule sync --recursive
+git submodule update --init --recursive
+
+if command -v vim >/dev/null 2>&1; then
+  for doc in "$REPO"/_vim/pack/*/start/*/doc; do
+    if [ -d "$doc" ]; then
+      vim -Nu NONE -Es -c "helptags $doc" -c 'qa!' || echo "warning: helptags failed for $doc" >&2
+    fi
+  done
+fi
