@@ -5,13 +5,14 @@
 
 # Find out where our files are if possible
 _TMP_REPO_PATH="$(dirname $(readlink ~/.bashrc))"
+#_TMP_REPO_PATH="/home/erik/Code/dotfiles"
 
 # Check what OS we are on and include the correct config
 case "$OSTYPE" in
   darwin*)  source "$_TMP_REPO_PATH/bash.d/osx.bash" ;;
   bsd*)     source "$_TMP_REPO_PATH/bash.d/bsd.bash" ;;
 #  solaris*) echo "SOLARIS" ;;
-#  linux*)   echo "LINUX" ;;
+  linux*)   source "$_TMP_REPO_PATH/bash.d/linux.bash" ;;
 #  msys*)    echo "WINDOWS" ;;
 #  cygwin*)  echo "ALSO WINDOWS" ;;
 #  *)        echo "unknown: $OSTYPE" ;;
