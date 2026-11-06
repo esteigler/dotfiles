@@ -14,7 +14,10 @@ else
 endif
 
 " % jumps between if/else/end, tags, etc. (ftplugins provide b:match_words).
-packadd! matchit
+" silent!: some vim builds (e.g. FreeBSD ports) have been seen without this
+" optional runtime package wired into 'packpath'; skip it rather than abort
+" the rest of .vimrc with E919.
+silent! packadd! matchit
 
 " Mouse reporting inside tmux, including beyond column 223.
 if exists('$TMUX') && has('mouse_sgr')
@@ -32,7 +35,10 @@ set showmatch
 set matchpairs+=<:>
 set visualbell
 set title
-colorscheme molokai
+" silent!: some vim builds have a broken/missing colors/lists/default.vim
+" (used to resolve named colors), which otherwise prints a warning and
+" forces a "Press ENTER" prompt on every startup.
+silent! colorscheme molokai
 
 "" Search
 set hlsearch
